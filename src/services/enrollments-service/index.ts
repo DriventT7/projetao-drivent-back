@@ -51,7 +51,7 @@ function getFirstAddress(firstAddress: Address): GetAddressResult {
 type GetAddressResult = Omit<Address, "createdAt" | "updatedAt" | "enrollmentId">;
 
 async function createOrUpdateEnrollmentWithAddress(params: CreateOrUpdateEnrollmentWithAddress) {
-  const enrollment = exclude(params, "address");
+  let enrollment = exclude(params, "address");
   const address = getAddressForUpsert(params.address);
 
   //BUG - Verificar se o CEP é válido
@@ -60,6 +60,12 @@ async function createOrUpdateEnrollmentWithAddress(params: CreateOrUpdateEnrollm
   if (result.error) {
     throw notFoundError();
   }
+
+  const dateBirthday = new Date(enrollment.birthday);
+  enrollment = {
+    ...enrollment,
+    birthday: dateBirthday
+  };
 
   const newEnrollment = await enrollmentRepository.upsert(params.userId, enrollment, exclude(enrollment, "userId"));
 
