@@ -44,9 +44,29 @@ async function createTicket(userId: number, ticketTypeId: number) {
   return ticket;
 }
 
+async function createTicketType(userId: number, price: number, isRemote: boolean, includesHotel: boolean) {
+  const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
+
+  if (!enrollment) {
+    throw notFoundError();
+  }
+
+  const ticketTypeData = {
+    name: enrollment.name,
+    price: price,
+    isRemote: isRemote,
+    includesHotel: includesHotel
+  };
+
+  const ticketType = await ticketRepository.createTicketType(ticketTypeData);
+
+  return ticketType;
+}
+
 const ticketService = {
   getTicketTypes,
   getTicketByUserId,
+  createTicketType,
   createTicket
 };
 

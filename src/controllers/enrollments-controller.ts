@@ -5,7 +5,6 @@ import httpStatus from "http-status";
 
 export async function getEnrollmentByUser(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
-  console.log("sim");
 
   try {
     const enrollmentWithAddress = await enrollmentsService.getOneWithAddressByUserId(userId);
@@ -18,13 +17,14 @@ export async function getEnrollmentByUser(req: AuthenticatedRequest, res: Respon
 
 export async function postCreateOrUpdateEnrollment(req: AuthenticatedRequest, res: Response) {
   try {
-    await enrollmentsService.createOrUpdateEnrollmentWithAddress({
+    const response = await enrollmentsService.createOrUpdateEnrollmentWithAddress({
       ...req.body,
       userId: req.userId,
     });
 
     return res.sendStatus(httpStatus.OK);
   } catch (error) {
+    console.log(error);
     return res.sendStatus(httpStatus.BAD_REQUEST);
   }
 }

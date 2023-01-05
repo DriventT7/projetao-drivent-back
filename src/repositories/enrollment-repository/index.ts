@@ -20,14 +20,13 @@ async function upsert(
   userId: number,
   createdEnrollment: CreateEnrollmentParams,
   updatedEnrollment: UpdateEnrollmentParams,
-) {
-  return prisma.enrollment.upsert({
-    where: {
-      userId,
-    },
-    create: createdEnrollment,
-    update: updatedEnrollment,
-  });
+) { return prisma.enrollment.upsert({
+  where: {
+    userId,
+  },
+  create: createdEnrollment,
+  update: updatedEnrollment,
+});
 }
 
 export type CreateEnrollmentParams = Omit<Enrollment, "id" | "createdAt" | "updatedAt">;
