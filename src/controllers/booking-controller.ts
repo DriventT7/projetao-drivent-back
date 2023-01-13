@@ -6,6 +6,7 @@ import bookingService from "@/services/booking-service";
 export async function listBooking(req: AuthenticatedRequest, res: Response) {
   try {
     const { userId } = req;
+
     const booking = await bookingService.getBooking(userId);
     return res.status(httpStatus.OK).send({
       id: booking.id,
@@ -13,6 +14,20 @@ export async function listBooking(req: AuthenticatedRequest, res: Response) {
     });
   } catch (error) {
     return res.sendStatus(httpStatus.NOT_FOUND);
+  }
+}
+
+export async function listRoomAndBookings(req: AuthenticatedRequest, res: Response) {
+  const { hotelId } = req.params;
+
+  try {
+    const rooms = await bookingService.getRoomsWithBookings(Number(hotelId));
+
+    return res.status(httpStatus.OK).send(
+      rooms
+    );
+  } catch (error) {
+    return res.sendStatus(httpStatus.BAD_REQUEST);
   }
 }
 
